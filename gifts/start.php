@@ -22,7 +22,7 @@ elgg_register_event_handler('init', 'system', 'gifts_init');
 function gifts_init() {
 
     // Set Plugin Version for Update Checks
-    elgg_set_plugin_setting('version', '1.9.1', 'gifts');
+    elgg_set_plugin_setting('version', '1.9.2', 'gifts');
 
     // Show in Menu
     if (elgg_is_logged_in()) {
