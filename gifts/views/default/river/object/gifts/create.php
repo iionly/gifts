@@ -28,7 +28,7 @@ if ((elgg_instanceof($performed_by, 'user')) && (elgg_instanceof($performed_on, 
 	$string = elgg_echo("gifts:river", array($object_link, $gift))  . " <a href=\"{$performed_by->getURL()}\">" . $performed_by->name . "</a> ";
 
 	echo elgg_view('river/elements/layout', array(
-			'item' => $vars['item'],
-			'message' => $string,
+		'item' => $vars['item'],
+		'message' => $string,
 	));
 }

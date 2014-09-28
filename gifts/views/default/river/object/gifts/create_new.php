@@ -34,8 +34,8 @@ if ((elgg_instanceof($sender, 'user')) && (elgg_instanceof($receiver, 'user'))) 
 	$string = elgg_echo("gifts:river_new", array($receiver_link, $gift_link, $sender_link));
 
 	echo elgg_view('river/elements/layout', array(
-			'item' => $vars['item'],
-			'message' => $string,
-			'attachments' => $attachment
+		'item' => $vars['item'],
+		'message' => $string,
+		'attachments' => $attachment
 	));
 }
