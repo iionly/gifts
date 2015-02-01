@@ -1,6 +1,6 @@
-Elgg Gifts Plugin for Elgg 1.9
-Latest Version: 1.9.3
-Released: 2014-09-28
+Elgg Gifts Plugin for Elgg 1.10
+Latest Version: 1.10.4
+Released: 2015-02-01
 Contact: iionly@gmx.de
 License: GNU General Public License version 2
 Copyright: (c) iionly, Galdrapiu, Christian Heckelmann
@@ -28,6 +28,11 @@ The default setting of suhosin.upload.max_uploads in suhosin.ini is 25. These pa
 
 
 Changelog:
+
+v1.10.4 2015-02-01 (by iionly)
+    + Based on version 1.9.3,
+    + Fix of deprecation issues occuring on Elgg 1.10 (namely changing output/confirmlink view to output/url view).
+
 
 v1.9.3 2014-09-28 (by iionly)
     + Merged changes of version 1.8.3 into Elgg 1.9 version of the Gifts plugin,

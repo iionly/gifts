@@ -52,9 +52,12 @@ if (elgg_get_logged_in_user_guid() == $owner) {
 				echo elgg_echo("gifts:object", array($receiver->name, $gift_link, $sender_link));
 				if (elgg_is_admin_logged_in() || (elgg_get_logged_in_user_guid() == $gift->owner_guid) || (elgg_get_logged_in_user_guid() == $gift->receiver)) {
 					echo "<div style='float:right;'>";
-					echo $delete_button = elgg_view("output/confirmlink",array(
+					echo $delete_button = elgg_view("output/url",array(
 						'href' => elgg_get_site_url() . "action/gifts/delete?guid=" . $gift->guid,
+						'text' => '',
 						'confirm' => elgg_echo('gifts:deleteconfirm'),
+						'is_action' => true,
+						'is_trusted' => true,
 						'class' => 'elgg-icon elgg-icon-delete'
 					));
 					echo "</div>";
@@ -106,9 +109,12 @@ if (elgg_get_logged_in_user_guid() == $owner) {
 				echo elgg_echo("gifts:object", array($receiver->name, $gift_link, $sender_link));
 				if (elgg_is_admin_logged_in() || (elgg_get_logged_in_user_guid() == $gift->owner_guid) || (elgg_get_logged_in_user_guid() == $gift->receiver)) {
 					echo "<div style='float:right;'>";
-					echo $delete_button = elgg_view("output/confirmlink",array(
+					echo $delete_button = elgg_view("output/url",array(
 						'href' => elgg_get_site_url() . "action/gifts/delete?guid=" . $gift->guid,
+						'text' => '',
 						'confirm' => elgg_echo('gifts:deleteconfirm'),
+						'is_action' => true,
+						'is_trusted' => true,
 						'class' => 'elgg-icon elgg-icon-delete'
 					));
 					echo "</div>";

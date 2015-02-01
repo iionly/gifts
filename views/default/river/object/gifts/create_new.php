@@ -9,7 +9,7 @@
  * @copyright Christian Heckelmann
  * @link http://www.heckelmann.info
  *
- * updated for Elgg 1.8 by iionly (iionly@gmx.de)
+ * updated by iionly (iionly@gmx.de)
  */
 
 $sender = $vars['item']->getSubjectEntity();

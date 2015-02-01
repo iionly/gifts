@@ -9,7 +9,7 @@
  * @copyright Christian Heckelmann
  * @link http://www.heckelmann.info
  *
- * updated for Elgg 1.8 and 1.9 by iionly (iionly@gmx.de)
+ * updated by iionly (iionly@gmx.de)
  */
 
 $useuserpoints  = elgg_get_plugin_setting('useuserpoints', 'gifts');
