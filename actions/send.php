@@ -13,17 +13,19 @@
  */
 
 // get the form input
-$receiver = get_input('send_to');
+$receiver_guid = get_input('send_to');
 $gift_id = get_input('gift_id');
 $body = get_input('body');
 $cost = get_input('giftcost');
 $access = get_input('access');
 
+$receiver = get_entity($receiver_guid);
+
 $sender = elgg_get_logged_in_user_entity();
-$sender_guid = elgg_get_logged_in_user_guid();
+$sender_guid = $sender->getGUID();
 
 // No Friend selected?
-if (empty($receiver) || empty($gift_id)) {
+if (!($receiver instanceof ElggUser) || empty($gift_id)) {
 	register_error(elgg_echo("gifts:blank"));
 	forward("gifts/".$sender->name."/sendgift");
 }
@@ -45,7 +47,7 @@ if($useuserpoints == 1 && function_exists('userpoints_subtract')) {
 // create a gifts object
 $gift = new ElggObject();
 $gift->description = $body;
-$gift->receiver = $receiver;
+$gift->receiver = $receiver_guid;
 $gift->gift_id = $gift_id;
 $gift->subtype = "gift";
 
@@ -56,15 +58,15 @@ $gift->owner_guid = $sender_guid;
 // save to database
 $gift->save();
 
-$sender = $sender;
-$msgto = get_entity($receiver);
-
 // send mail notification
-notify_user($msgto->getGUID(),
-	$sender->getGUID(),
-	elgg_echo('gifts:mail:subject'),
-	elgg_echo('gifts:mail:body', array($sender->name, elgg_get_site_url() . "gifts/" . $msgto->username . "/index"))
-);
+$msgto_language = ($receiver->language) ? $receiver->language : (($site_language = elgg_get_config('language')) ? $site_language : 'en');
+$subject = elgg_echo('gifts:mail:subject', array(), $msgto_language);
+$message = elgg_echo('gifts:mail:body', array($sender->name, elgg_get_site_url() . "gifts/" . $receiver->username . "/singlegift?guid=" . $gift->getGUID()), $msgto_language);
+notify_user($receiver_guid, elgg_get_logged_in_user_guid(), $subject, $message, array(
+	'object' => $gift,
+	'action' => 'send',
+	'summary' => $subject
+));
 
 // Add to river
 if ((elgg_get_plugin_setting('showallgifts', 'gifts') == 1) && ($access != ACCESS_PRIVATE)) {

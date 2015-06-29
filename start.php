@@ -87,6 +87,8 @@ function gifts_init() {
 	elgg_register_action("gifts/savegifts", "$base_dir/savegifts.php", 'admin');
 	elgg_register_action("gifts/sendgift", "$base_dir/send.php", 'logged_in');
 	elgg_register_action("gifts/delete", "$base_dir/delete.php", 'logged_in');
+	elgg_register_action("gifts/ajaxGetPoints", "$base_dir/ajaxGetPoints.php", 'logged_in');
+	elgg_register_action("gifts/ajaxImage", "$base_dir/ajaxImage.php", 'logged_in');
 
 	// override permissions for gift objects to allow for deleting them both by sender and receiver
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'gifts_permissions_check');
@@ -138,11 +140,13 @@ function gifts_page_handler($page) {
  */
 function gifts_url($hook, $type, $url, $params) {
 	$entity = $params['entity'];
-	if (elgg_instanceof($entity, 'object', 'gifts')) {
-		$title = $entity->title;
-		$title = elgg_get_friendly_title($title);
-		return "gifts/" . $entity->getOwnerEntity()->username . "/read/".$entity->getGUID();
+
+	if (!elgg_instanceof($entity, 'object', 'gift')) {
+		return $url;
 	}
+
+	$receiver = get_entity($entity->receiver);
+	return "gifts/" . $receiver->username . "/singlegift?guid=" . $entity->getGUID();
 }
 
 /**
