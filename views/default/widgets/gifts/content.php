@@ -54,11 +54,10 @@ if (elgg_get_logged_in_user_guid() == $owner) {
 					echo "<div style='float:right;'>";
 					echo $delete_button = elgg_view("output/url",array(
 						'href' => elgg_get_site_url() . "action/gifts/delete?guid=" . $gift->guid,
-						'text' => '',
+						'text' => elgg_view_icon('delete'),
 						'confirm' => elgg_echo('gifts:deleteconfirm'),
 						'is_action' => true,
 						'is_trusted' => true,
-						'class' => 'elgg-icon elgg-icon-delete'
 					));
 					echo "</div>";
 				}
@@ -111,11 +110,10 @@ if (elgg_get_logged_in_user_guid() == $owner) {
 					echo "<div style='float:right;'>";
 					echo $delete_button = elgg_view("output/url",array(
 						'href' => elgg_get_site_url() . "action/gifts/delete?guid=" . $gift->guid,
-						'text' => '',
+						'text' => elgg_view_icon('delete'),
 						'confirm' => elgg_echo('gifts:deleteconfirm'),
 						'is_action' => true,
 						'is_trusted' => true,
-						'class' => 'elgg-icon elgg-icon-delete'
 					));
 					echo "</div>";
 				}

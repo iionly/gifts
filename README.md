@@ -1,8 +1,8 @@
-Elgg Gifts Plugin for Elgg 1.10 - 1.11
+Elgg Gifts Plugin for Elgg 1.10 - 1.12
 ======================================
 
-Latest Version: 1.10.5  
-Released: 2015-06-21  
+Latest Version: 1.10.6  
+Released: 2015-10-10  
 Contact: iionly@gmx.de  
 License: GNU General Public License version 2  
 Copyright: (c) iionly, Galdrapiu, Christian Heckelmann
