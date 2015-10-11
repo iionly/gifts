@@ -98,38 +98,35 @@ function gifts_init() {
  * Page Handler
  */
 function gifts_page_handler($page) {
+	$resource_vars = array();
 	if (isset($page[0])) {
-		set_input('username',$page[0]);
+		$resource_vars['username'] = $page[0];
 	} else {
 		return false;
 	}
-	$base = elgg_get_plugins_path() . 'gifts/pages/gifts';
 	if (isset($page[1])) {
 		switch($page[1]) {
 			case "read":
-				set_input('guid',$page[2]);
-				require "$base/index.php";
-				break;
 			case "index":
-				require "$base/index.php";
+				echo elgg_view_resource('gifts/index', $resource_vars);
 				break;
 			case "sent":
-				require "$base/sent.php";
+				echo elgg_view_resource('gifts/sent', $resource_vars);
 				break;
 			case "sendgift":
-				require "$base/sendgift.php";
+				echo elgg_view_resource('gifts/sendgift', $resource_vars);
 				break;
 			case "singlegift":
-				require "$base/singlegift.php";
+				echo elgg_view_resource('gifts/singlegift', $resource_vars);
 				break;
 			case "all":
-				require "$base/all.php";
+				echo elgg_view_resource('gifts/all', $resource_vars);
 				break;
 			default:
 				return false;
 		}
 	} else {
-		require "$base/index.php";
+		echo elgg_view_resource('gifts/index', $resource_vars);
 	}
 
 	return true;
