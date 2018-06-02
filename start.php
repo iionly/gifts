@@ -12,6 +12,9 @@
  * updated by iionly (iionly@gmx.de)
  */
 
+require_once(dirname(__FILE__) . '/lib/functions.php');
+require_once(dirname(__FILE__) . '/lib/hooks.php');
+
 elgg_register_event_handler('init', 'system', 'gifts_init');
 
 /**
@@ -19,78 +22,79 @@ elgg_register_event_handler('init', 'system', 'gifts_init');
  */
 function gifts_init() {
 
-	elgg_extend_view('css/elgg','gifts/css');
+	// Extend CSS
+	elgg_extend_view('css/elgg', 'gifts/css');
 
 	// Show in Menu
 	if (elgg_is_logged_in()) {
-		elgg_register_menu_item('site', array(
+		elgg_register_menu_item('site', [
 			'name' => 'gifts',
 			'text' => elgg_echo('gifts:menu'),
-			'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/index"
-		));
+			'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/index",
+		]);
+		elgg_register_menu_item('page', [
+			'name' => '01_yourgifts',
+			'text' => elgg_echo('gifts:yourgifts'),
+			'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/index",
+			'context' => 'gifts',
+			'section' => 'default',
+		]);
+		elgg_register_menu_item('page', [
+			'name' => '03_sentgifts',
+			'text' => elgg_echo('gifts:sent'),
+			'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/sent",
+			'context' => 'gifts',
+			'section' => 'default',
+		]);
 	}
 
-	elgg_register_admin_menu_item('administer', 'gifts', 'administer_utilities');
-
-	elgg_register_menu_item('page', array(
-		'name' => 'yourgifts',
-		'text' => elgg_echo('gifts:yourgifts'),
-		'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/index",
-		'context' => 'gifts',
-		'section' => 'default'
-	));
-
 	// Show all gifts?
-	if (elgg_get_plugin_setting('showallgifts', 'gifts') == 1) {
-		elgg_register_menu_item('page', array(
-			'name' => 'allgifts',
+	$showallgifts = (string) elgg_get_plugin_setting('showallgifts', 'gifts');
+	if ($showallgifts == '1') {
+		elgg_register_menu_item('page', [
+			'name' => '02_allgifts',
 			'text' => elgg_echo('gifts:allgifts'),
 			'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/all",
 			'context' => 'gifts',
-			'section' => 'default'
-		));
+			'section' => 'default',
+		]);
 	}
-
-	elgg_register_menu_item('page', array(
-		'name' => 'sentgifts',
-		'text' => elgg_echo('gifts:sent'),
-		'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/sent",
-		'context' => 'gifts',
-		'section' => 'default'
-	));
-	elgg_register_menu_item('page', array(
-		'name' => 'sendgifts',
-		'text' => elgg_echo('gifts:sendgifts'),
-		'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/sendgift",
-		'context' => 'gifts',
-		'section' => 'default'
-	));
 
 	// Add Widget
 	elgg_register_widget_type('gifts', elgg_echo("gifts:widget"), elgg_echo("gifts:widget:description"));
-	if (elgg_get_plugin_setting('showallgifts', 'gifts') == 1) {
-		elgg_register_widget_type('index_gifts', elgg_echo("gifts:widget"), elgg_echo("gifts:index_widget:description"), array("index"));
-		//register title urls for gifts index widget
-		elgg_register_plugin_hook_handler('entity:url', 'object', "gifts_widget_urls");
+	if ($showallgifts == '1') {
+		elgg_register_widget_type('index_gifts', elgg_echo("gifts:widget"), elgg_echo("gifts:index_widget:description"), ['index']);
 	}
+	// Register title urls for gifts index widget
+	elgg_register_plugin_hook_handler('entity:url', 'object', "gifts_widget_urls");
 
+	// Pagehandler
 	elgg_register_page_handler('gifts', 'gifts_page_handler');
-	// override the default url to view a gift object
+	
+	// Override the default url to view a gift object
     elgg_register_plugin_hook_handler('entity:url', 'object', 'gifts_url');
+
+	// Override the default url of a giftsfile icon
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'giftsfile_url');
 
 	// Extend avatar hover menu
 	elgg_register_plugin_hook_handler('register', 'menu:user_hover', 'gifts_user_hover_menu');
 
-	// Register actions
-	$base_dir = elgg_get_plugins_path() . 'gifts/actions';
-	elgg_register_action("gifts/settings", "$base_dir/savesettings.php", 'admin');
-	elgg_register_action("gifts/savegifts", "$base_dir/savegifts.php", 'admin');
-	elgg_register_action("gifts/sendgift", "$base_dir/send.php", 'logged_in');
-	elgg_register_action("gifts/delete", "$base_dir/delete.php", 'logged_in');
-	elgg_register_action("gifts/ajaxGetPoints", "$base_dir/ajaxGetPoints.php", 'logged_in');
-	elgg_register_action("gifts/ajaxImage", "$base_dir/ajaxImage.php", 'logged_in');
+	// Entity menu
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'gifts_entity_menu_setup');
 
-	// override permissions for gift objects to allow for deleting them both by sender and receiver
+	// Register for search (or rather for activity page filter only as gifts won't appear in search results due to title attribute not used)
+	elgg_register_entity_type('object', Gifts::SUBTYPE);
+
+	// Register actions
+	elgg_register_action('gifts/savegifts', dirname(__FILE__) . '/actions/savegifts.php', 'admin');
+	elgg_register_action('gifts/upgrade', dirname(__FILE__) . '/actions/upgrade.php', 'admin');
+	elgg_register_action('gifts/sendgift', dirname(__FILE__) . '/actions/send.php', 'logged_in');
+	elgg_register_action('gifts/delete', dirname(__FILE__) . '/actions/delete.php', 'logged_in');
+	elgg_register_action('gifts/ajaxGetPoints', dirname(__FILE__) . '/actions/ajaxGetPoints.php', 'logged_in');
+	elgg_register_action('gifts/ajaxImage', dirname(__FILE__) . '/actions/ajaxImage.php', 'logged_in');
+
+	// Override permissions for gift objects to allow for deleting them both by sender and receiver
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'gifts_permissions_check');
 }
 
@@ -98,7 +102,7 @@ function gifts_init() {
  * Page Handler
  */
 function gifts_page_handler($page) {
-	$resource_vars = array();
+	$resource_vars = [];
 	if (isset($page[0])) {
 		$resource_vars['username'] = $page[0];
 	} else {
@@ -111,12 +115,16 @@ function gifts_page_handler($page) {
 				echo elgg_view_resource('gifts/index', $resource_vars);
 				break;
 			case "sent":
+				elgg_gatekeeper();
 				echo elgg_view_resource('gifts/sent', $resource_vars);
 				break;
 			case "sendgift":
+				elgg_gatekeeper();
+				$resource_vars['send_to'] = (int) get_input('send_to');
 				echo elgg_view_resource('gifts/sendgift', $resource_vars);
 				break;
 			case "singlegift":
+				$resource_vars['guid'] = (int) get_input('guid');
 				echo elgg_view_resource('gifts/singlegift', $resource_vars);
 				break;
 			case "all":
@@ -130,82 +138,4 @@ function gifts_page_handler($page) {
 	}
 
 	return true;
-}
-
-/**
- * URL Handler
- */
-function gifts_url($hook, $type, $url, $params) {
-	$entity = $params['entity'];
-
-	if (!elgg_instanceof($entity, 'object', 'gift')) {
-		return $url;
-	}
-
-	$receiver = get_entity($entity->receiver);
-	return "gifts/" . $receiver->username . "/singlegift?guid=" . $entity->getGUID();
-}
-
-/**
- * Add to the user hover menu
- */
-function gifts_user_hover_menu($hook, $type, $return, $params) {
-	$user = $params['entity'];
-
-	if (elgg_is_logged_in() && elgg_get_logged_in_user_guid() != $user->guid) {
-		$url = "gifts/".elgg_get_logged_in_user_entity()->username."/sendgift?send_to={$user->guid}";
-		$item = new ElggMenuItem('gifts', elgg_echo("gifts:send"), $url);
-		$item->setSection('action');
-		$return[] = $item;
-	}
-
-	return $return;
-}
-
-function gifts_widget_urls($hook_name, $entity_type, $return_value, $params){
-	$result = $return_value;
-	$widget = $params["entity"];
-
-	if(empty($result) && ($widget instanceof ElggWidget)) {
-		$owner = $widget->getOwnerEntity();
-		switch($widget->handler) {
-			case "gifts":
-				$result = "/gifts/" . elgg_get_logged_in_user_entity()->username . "/all";
-				break;
-			case "index_gifts":
-				$result = "/gifts/" . elgg_get_logged_in_user_entity()->username . "/all";
-				break;
-		}
-	}
-	return $result;
-}
-
-/**
- * override permissions for gift objects to allow for deleting them both by sender and receiver
- *
- * @param $hook_name
- * @param $entity_type
- * @param $return_value
- * @param $parameters
- * @return unknown_type
- */
-function gifts_permissions_check($hook_name, $entity_type, $return_value, $parameters) {
-
-	$gift = $parameters['entity'];
-	$user = $parameters['user'];
-
-	$has_access = false;
-	if (($gift->getSubtype() == "gift") && (($user->guid == $gift->owner_guid) || ($user->guid == $gift->receiver))) {
-		$has_access = true;
-	} else {
-		return null;
-	}
- 
-	if ($has_access === true) {
-		return true;
-	} else if ($has_access === false) {
-		return false;
-	}
-
-	return null;
 }

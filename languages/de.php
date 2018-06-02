@@ -14,8 +14,8 @@
  * German translation by iionly
  */
 
-return array(
-	'admin:administer_utilities:gifts' => "Gifts",
+return [
+	'admin:settings:gifts' => "Gifts",
 	'river:gifts:user:default' => "Ein neues Geschenk wurde versendet!",
 	'river:gifts:object:default' => "Ein neues Geschenk wurde versendet!",
 	'gifts:menu' => "Geschenke" ,
@@ -24,7 +24,7 @@ return array(
 	'gifts:sent' => "Versendete Geschenke",
 	'gifts:sendgifts' => "Versende ein Geschenk",
 	'gifts:singlegifts' => "Geschenkdetails",
-	'gifts:friend' => "Freund(in): ",
+	'gifts:send_to' => "Sende ein Geschenk an: ",
 	'gifts:message' => "Nachricht: ",
 	'gifts:selectgift' => "Wähle ein Geschenk: ",
 	'gifts:gift' => "Geschenk",
@@ -37,8 +37,10 @@ return array(
 	'gifts:object' => "%s hat %s von %s erhalten.",
 	'gifts:river' => "%s erhielt ein %s von ",
 	'gifts:river_new' => "%s erhielt %s von %s.",
-	'gifts:blank' => "Bitte wähle den Freund / die Freundin aus, die das Geschenk erhalten soll!",
+	'gifts:blank' => "Bitte wähle ein Mitglied aus, das das Geschenk erhalten soll!",
+	'gifts:gift_self' => "Du kannst nicht ein Geschenk an Dich selbst schicken!",
 	'gift:delete:success' => "Das Geschenk wurde gelöscht.",
+	'gift:delete:error' => "Entschuldigung. Das Löschen des Geschenks ist fehlgeschlagen.",
 	'gifts:deleteconfirm' => "Bist Du sicher, dass Du dieses Geschenk löschen willst? Es wird dann sowohl für den Schenker als auch für den Beschenkten unwiederbringlich weg sein.",
 
 	'gifts:sender_fallback' => 'einem früheren Mitglied',
@@ -57,15 +59,17 @@ return array(
 	'gifts:pointsuccess' => "Die Kosten für das Geschenk wurden von Deinen Aktivitätspunkten abgezogen!",
 
 	'item:object:gift' => 'Geschenke',
+	'gifts:upgrade' => 'Aktualisieren',
+	'gifts:upgrade:success' => 'Die Aktualisierung des Gifts-Plugin war erfolgreich.',
+	'gifts:upgrade:not_required' => 'Es ist keine Aktualisiertung notwendig.',
+	'gifts:settings' => 'Plugin-Einstellungen',
+	'gifts:giftsettings' => "Geschenke",
 	'gifts:settings:number' => "Anzahl der Geschenke?",
 	'gifts:settings:title' => "Geschenk",
-	'gifts:settings:globalsettings' => "Einstellungen",
-	'gifts:settings:giftsettings' => "Geschenke",
+	'gifts:settings:name' => "Name",
 	'gifts:settings:useuserpoints' => "Das Elggx-Userpoints-Plugin verwenden?",
 	'gifts:settings:userpoints' => "Aktivitätspunkte",
 	'gifts:settings:image' => "Bild",
-	'gifts:settings:showallyes' => "Ja",
-	'gifts:settings:showallno' => "Nein",
 	'gifts:settings:showallgifts' => "Alle Geschenke anzeigen?",
 	'gifts:settings:saveok' => "Die Einstellungen wurden gespeichert.",
 	'gifts:settings:savefail' => "Beim Speichern der Einstellungen ist ein Fehler aufgetreten!",
@@ -75,5 +79,5 @@ return array(
 
 Um Dein Geschenk anzusehen, folge dem Link: %s
 
-Du kannst auf diese Email NICHT antworten."
-);
+Du kannst auf diese Email NICHT antworten.",
+];

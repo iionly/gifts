@@ -13,60 +13,56 @@
  */
 
 // Select Receiver and Sender
-$sender = get_entity($vars['entity']->owner_guid);
-$receiver = get_entity($vars['entity']->receiver);
-$message = $vars['entity']->description;
+$gift = elgg_extract('entity', $vars);
+$sender = get_entity($gift->owner_guid);
+$receiver = get_entity($gift->receiver);
+$message = $gift->description;
 
-if (elgg_instanceof($sender, 'user')) {
-	$sender_link = "<a href=\"{$sender->getURL()}\">{$sender->name}</a>";
+if ($sender instanceof ElggUser) {
+	$sender_link = elgg_format_element('a', ['href' => $sender->getURL()], $sender->name);
 } else {
 	$sender_link = elgg_echo('gifts:sender_fallback');
 }
 
-if (elgg_instanceof($receiver, 'user')) {
-	$receiver_link = "<a href=\"{$receiver->getURL()}\">{$receiver->name}</a>";
+if ($receiver instanceof ElggUser) {
+	$receiver_link = elgg_format_element('a', ['href' => $receiver->getURL()], $receiver->name);
 } else {
 	$receiver_link = elgg_echo('gifts:receiver_fallback');
 }
 
-$gifttext = elgg_get_plugin_setting('gift_'.$vars['entity']->gift_id, 'gifts');
-$imagefile = "gift_".$vars['entity']->gift_id."_default.jpg";
-$imgfile = dirname(dirname(dirname(dirname(__FILE__))))."/images/".$imagefile;
+$gifttext = (string) elgg_get_plugin_setting("gift_{$gift->gift_id}", 'gifts');
+$giftsfile_guid = (int) elgg_get_plugin_setting('giftsfileguid_' . $gift->gift_id, 'gifts');
+$image = get_entity($giftsfile_guid);
 
-echo elgg_view_title($gifttext);
-
-if (elgg_is_admin_logged_in() || (elgg_get_logged_in_user_guid() == $vars['entity']->owner_guid) || (elgg_get_logged_in_user_guid() == $vars['entity']->receiver)) {
-	echo "<div style='float:right;'>";
-	echo $delete_button = elgg_view("output/url",array(
-		'href' => elgg_get_site_url() . "action/gifts/delete?guid=" . $vars['entity']->guid,
-		'text' => elgg_view_icon('delete'),
-		'confirm' => elgg_echo('gifts:deleteconfirm'),
-		'is_action' => true,
-		'is_trusted' => true,
-	));
-	echo "</div>";
+if ($image instanceof GiftsFile) {
+	$imageurl = $image->getIconURL('default');
+} else {
+	$imageurl = elgg_get_simplecache_url("icons/default/large.png");
 }
-?>
 
-<div>
+$controls = elgg_view_menu('entity', [
+	'entity' => $gift,
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-hz',
+]);
 
-<p>
-<?php
-	if (file_exists($imgfile)) {
-		echo '<img src="'.elgg_get_site_url().'mod/gifts/images/'.$imagefile.'" /><br/>';
-	}
-	echo elgg_echo("gifts:object", array($receiver_link, $gifttext, $sender_link));
-?>
+$subtitle = [];
+$subtitle[] = elgg_echo("gifts:object", [$receiver_link, $gifttext, $sender_link]);
+$subtitle[] = elgg_view_friendly_time($gift->time_created);
 
-</p>
-<?php
-	if($message) {
-?>
-	<p>
-		<label><?php echo elgg_echo('gifts:message'); ?><br/></label>
-		<?php echo $message; ?>
-	</p>
-<?php
-	}
-?>
-</div>
+$content = elgg_format_element('p', [], elgg_format_element('img', ['class' => 'elgg-photo', 'src' => $imageurl], ''));
+if ($message) {
+	$content .= elgg_format_element('div', ['class' => 'mbs'], elgg_format_element('label', [], elgg_echo('gifts:message')));
+	$content .= elgg_view('output/longtext', [
+		'value' => $message,
+	]);
+}
+$content = elgg_format_element('div', [], $content);
+
+echo elgg_view('object/elements/summary', [
+	'entity' => $gift,
+	'title' => $gifttext,
+	'metadata' => $controls,
+	'subtitle' => implode('<br>', $subtitle),
+	'content' => $content,
+]);

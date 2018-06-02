@@ -3,19 +3,20 @@
 	<name>Gifts</name>
 	<id>gifts</id>
 	<author>iionly, Galdrapiu, Christian Heckelmann</author>
-	<version>2.0.0</version>
+	<version>2.3.1</version>
 	<category>enhancement</category>
 	<description>Send Gifts to your Friends.</description>
 	<website>https://github.com/iionly</website>
-	<copyright>(C) iionly, Galdrapiu, Christian Heckelmann 2009-2015</copyright>
+	<copyright>(C) iionly, Galdrapiu, Christian Heckelmann 2009</copyright>
 	<license>GNU Public License version 2</license>
 	<requires>
 		<type>elgg_release</type>
-		<version>2.0.0-beta.1</version>
+		<version>2.3.0</version>
 	</requires>
 	<suggests>
 		<type>plugin</type>
 		<name>elggx_userpoints</name>
+		<version>2.3.2</version>
 	</suggests>
 	<suggests>
 		<type>plugin</type>

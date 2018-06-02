@@ -12,7 +12,7 @@
  * updated by iionly (iionly@gmx.de)
  */
 
-$gift_guid = (int)get_input('guid');
+$gift_guid = (int) elgg_extract('guid', $vars);
 
 $access = elgg_set_ignore_access(true);
 
@@ -22,44 +22,43 @@ elgg_push_breadcrumb(elgg_echo('gifts:menu'), 'gifts/' . elgg_get_logged_in_user
 $title = elgg_echo('gifts:singlegifts');
 elgg_push_breadcrumb($title);
 
-if ($gift->getSubtype() != 'gift') {
+if (elgg_is_logged_in()) {
+	elgg_register_menu_item('title', [
+		'name' => 'sendgift',
+		'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/sendgift",
+		'text' => elgg_echo('gifts:sendgifts'),
+		'link_class' => 'elgg-button elgg-button-action',
+	]);
+}
+
+if (!($gift instanceof Gifts)) {
 	elgg_set_ignore_access($access);
 	forward(REFERER);
-} else if (elgg_get_logged_in_user_guid() == $gift->receiver) {
+}
 
-	$result = elgg_view_entity($gift);
-	if (!empty($result)) {
-		$area2 = $result;
-	} else {
-		$area2 = elgg_echo('gifts:nogifts');
-	}
-
-	elgg_set_context('gifts');
-
-	// Format page
-	$body = elgg_view_layout('content', array('content' => $area2, 'filter' => '', 'title' => $title));
-
-	// Draw it
-	echo elgg_view_page($title, $body);
-
+$content = '';
+if (elgg_get_logged_in_user_guid() == $gift->receiver) {
+	$content = elgg_view_entity($gift);
 	elgg_set_ignore_access($access);
-
 } else {
-
+	// First reset elgg_set_ignore_access() to see if viewer has permission to see gift
 	elgg_set_ignore_access($access);
 	$gift = get_entity($gift_guid);
-
-	if ($gift) {
-		$area2 = elgg_view_entity($gift);
-	} else {
-		$area2 = elgg_echo('gifts:nogifts');
+	if ($gift instanceof Gifts) {
+		$content = elgg_view_entity($gift);
 	}
-
-	elgg_set_context('gifts');
-
-	// Format page
-	$body = elgg_view_layout('content', array('content' => $area2, 'filter' => '', 'title' => $title));
-
-	// Draw it
-	echo elgg_view_page($title, $body);
 }
+
+if (!$content) {
+	$content = elgg_echo('gifts:nogifts');
+}
+
+// Format page
+$body = elgg_view_layout('content', [
+	'content' => $content,
+	'filter' => '',
+	'title' => $title,
+]);
+
+// Draw it
+echo elgg_view_page($title, $body);

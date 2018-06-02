@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v2.3.1 2018-06-02 (by iionly)
+-----------------------------
+
+- Requires Elgg 2.3 at minimum,
+- If userpoints functionality is used requires Elggx Userpoints version 2.3.2 at minimum,
+- Thorough code cleanup and rewrite,
+- Gifts images now saved in and served from Elgg data directory (see README.md for upgrade instructions),
+- Gift image upload separately for each gift,
+- Gifts entries filter available on the activity page,
+- Nicer layout of single gift and gift listing pages,
+- "Send gift" title button added instead of using a sidebar menu entry.
+
 v2.0.0 2015-10-10 (by iionly)
 -----------------------------
 

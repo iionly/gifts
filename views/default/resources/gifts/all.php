@@ -16,22 +16,33 @@ elgg_push_breadcrumb(elgg_echo('gifts:menu'), 'gifts/' . elgg_get_logged_in_user
 $title = elgg_echo('gifts:allgifts');
 elgg_push_breadcrumb($title);
 
-// Show All gifts enabled?
-if(elgg_get_plugin_setting('showallgifts', 'gifts') == 1) {
-	$result = elgg_list_entities(array('type' => 'object', 'subtype' => 'gift'));
-	if (!empty($result)) {
-		$area2 = $result;
-	} else {
-		$area2 = elgg_echo('gifts:nogifts');
-	}
-} else {
-	$area2 = elgg_echo('gifts:nogifts');
+if (elgg_is_logged_in()) {
+	elgg_register_menu_item('title', [
+		'name' => 'sendgift',
+		'href' => "gifts/" . elgg_get_logged_in_user_entity()->username . "/sendgift",
+		'text' => elgg_echo('gifts:sendgifts'),
+		'link_class' => 'elgg-button elgg-button-action',
+	]);
 }
 
-elgg_set_context('gifts');
+// Show All gifts enabled?
+$showallgifts = (string) elgg_get_plugin_setting('showallgifts', 'gifts');
+if ($showallgifts == '1') {
+	$content = elgg_list_entities([
+		'type' => 'object',
+		'subtype' => Gifts::SUBTYPE,
+		'no_results' => elgg_echo('gifts:nogifts'),
+	]);
+} else {
+	$content = elgg_echo('gifts:nogifts');
+}
 
 // Format page
-$body = elgg_view_layout('content', array('content' => $area2, 'filter' => '', 'title' => $title));
+$body = elgg_view_layout('content', [
+	'content' => $content,
+	'filter' => '',
+	'title' => $title,
+]);
 
 // Draw it
 echo elgg_view_page($title, $body);

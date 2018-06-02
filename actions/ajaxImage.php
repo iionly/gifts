@@ -1,16 +1,20 @@
 <?php
 
-$imageID = get_input('ImageID', 0);
+$gift_id = (int) get_input('ImageID', 0);
 
-$imagefile = "gift_" . $imageID . "_default.jpg";
-$imgfile = elgg_get_plugins_path() . 'gifts/images/' . $imagefile;
+$giftsfile_guid = (int) elgg_get_plugin_setting('giftsfileguid_' . $gift_id, 'gifts');
+$image = get_entity($giftsfile_guid);
 
-if (file_exists($imgfile)) {
-	$html = "<img src=\"" . elgg_get_site_url() . 'mod/gifts/images/' . $imagefile . "\" />";
+if ($image instanceof GiftsFile) {
+	$image_url = $image->getIconURL('default');
+	$image_url = elgg_format_url($image_url);
 } else {
-	$html = "<img src=\"" . elgg_get_site_url() . "mod/gifts/images/noimage.jpg\" />";
+	$image_url = elgg_get_simplecache_url('icons/default/large.png');
 }
 
-$response = array('success' => true, 'html' => $html);
+$response = [
+	'success' => true,
+	'html' => elgg_format_element('img', ['class' => 'elgg-photo', 'src' => $image_url], ''),
+];
+
 echo json_encode($response);
-exit();

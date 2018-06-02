@@ -3,20 +3,15 @@
  * Gifts widget edit view
  */
 
-// set default value
-if (!isset($vars['entity']->num_display)) {
-	$vars['entity']->num_display = 4;
-}
+$widget = elgg_extract('entity', $vars);
+$num_display = (int) $widget->num_display ?: 4;
 
-$params = array(
+echo elgg_view_field([
+	'#type' => 'number',
+	'#label' => elgg_echo('gifts:widget:num_display'),
 	'name' => 'params[num_display]',
-	'value' => $vars['entity']->num_display,
-	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-);
-$dropdown = elgg_view('input/select', $params);
-
-?>
-<div>
-	<?php echo elgg_echo("gifts:widget:num_display"); ?>:
-	<?php echo $dropdown; ?>
-</div>
+	'value' => $num_display,
+	'min' => 1,
+	'max' => 25,
+	'step' => 1,
+]);

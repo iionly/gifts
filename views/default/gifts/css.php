@@ -1,4 +1,3 @@
-<?php
 /**
  * Elgg Gifts plugin
  * Send gifts to you friends
@@ -11,7 +10,6 @@
  *
  * updated by iionly (iionly@gmx.de)
  */
-?>
 
 .user_menu_gift {
 	margin:0;
@@ -20,6 +18,10 @@
 
 /* Container for Gift Preview Image */
 #gift_preview {
+}
+
+.gifts-photo-item {
+	margin-left: 7px;
 }
 
 /* Gifts Widget */

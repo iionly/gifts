@@ -13,8 +13,8 @@
  * updated by iionly (iionly@gmx.de)
  */
 
-return array(
-	'admin:administer_utilities:gifts' => "Gifts",
+return [
+	'admin:settings:gifts' => "Gifts",
 	'river:gifts:user:default' => "A new gift was sent!",
 	'river:gifts:object:default' => "A new gift was sent!",
 	'gifts:menu' => "Gifts" ,
@@ -23,7 +23,7 @@ return array(
 	'gifts:sent' => "Sent Gifts",
 	'gifts:sendgifts' => "Send a gift",
 	'gifts:singlegifts' => "Gift Details",
-	'gifts:friend' => "Friend: ",
+	'gifts:send_to' => "Send a gift to: ",
 	'gifts:message' => "Message: ",
 	'gifts:selectgift' => "Choose your Gift: ",
 	'gifts:gift' => "Gift",
@@ -36,8 +36,10 @@ return array(
 	'gifts:object' => "%s received %s from %s.",
 	'gifts:river' => "%s received a %s from ",
 	'gifts:river_new' => "%s received %s from %s.",
-	'gifts:blank' => "Please select a friend!",
+	'gifts:blank' => "Please select a member and a gift!",
+	'gifts:gift_self' => "You can't send a gift to yourself!",
 	'gift:delete:success' => "The gift was deleted successfully.",
+	'gift:delete:error' => "Sorry. Deletion of the gift failed.",
 	'gifts:deleteconfirm' => "Are you sure you want to delete this gift? It will be unrecoverable lost both for the donor and the presentee.",
 
 	'gifts:sender_fallback' => 'a former member',
@@ -56,15 +58,18 @@ return array(
 	'gifts:pointsuccess' => "Gift paid!",
 
 	'item:object:gift' => 'Gifts',
+	'gifts:upgrade' => 'Upgrade',
+	'gifts:upgrade:success' => 'Upgrade of the Gifts plugin was successful.',
+	'gifts:upgrade:not_required' => 'No upgrade required.',
+	'gifts:settings' => 'Plugin Settings',
+	'gifts:giftsettings' => "Gifts",
 	'gifts:settings:number' => "How many gifts do you want to provide?",
 	'gifts:settings:title' => "Gift",
+	'gifts:settings:name' => "Name",
 	'gifts:settings:globalsettings' => "Settings",
-	'gifts:settings:giftsettings' => "Gifts",
 	'gifts:settings:useuserpoints' => "Use Userpoints?",
 	'gifts:settings:userpoints' => "Points",
 	'gifts:settings:image' => "Image",
-	'gifts:settings:showallyes' => "Yes",
-	'gifts:settings:showallno' => "No",
 	'gifts:settings:showallgifts' => "Show All Gifts?",
 	'gifts:settings:saveok' => "Settings saved successfully.",
 	'gifts:settings:savefail' => "Could not save settings!",
@@ -74,5 +79,5 @@ return array(
 
 To view your Gift click the link below: %s
 
-You cannot reply to this email."
-);
+You cannot reply to this email.",
+];
